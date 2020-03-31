@@ -1,14 +1,15 @@
 LOC    OBJ              LINE   SOURCE
-                        1      ; 
-036FFA EAD9C0                  ; LD $C0D9, A
-036FFD EADEC0                  ; LD $C0DE, A
-                               ; Check which character is active
-037000 FAC9C0                  ; LD A, $C0C9
-037003 A7                      ; AND A
-037004 FA84C0                  ; LD A, $C084
-037007 2005                    ; JR NZ +#5
-037009 EAD5C0                  ; LD $C0D5, A
-03700C 1804                    ; JR +#4
-03700E EADAC0                  ; LD $C0DA, A
-                       ??      ; Padding and resume original code afterwards.
-037011 00                      ; NOP
+                        1      ; First load the max health into the offsets for both characters.
+036FFA EAD9C0           2      ; LD $C0D9, A
+036FFD EADEC0           3      ; LD $C0DE, A
+                        4      ; Check which character is active
+037000 FAC9C0           5      ; LD A, $C0C9
+037003 A7               6      ; AND A
+037004 FA84C0           7      ; LD A, $C084
+                        8      ; Only add the extra current health to the current characters value (0xC0D5 is X, 0xC0DA is Zero).
+037007 2005             9      ; JR NZ +#5
+037009 EAD5C0           10     ; LD $C0D5, A
+03700C 1804             11     ; JR +#4
+03700E EADAC0           12     ; LD $C0DA, A
+                        13     ; Padding and resume original code afterwards.
+037011 00               14     ; NOP
