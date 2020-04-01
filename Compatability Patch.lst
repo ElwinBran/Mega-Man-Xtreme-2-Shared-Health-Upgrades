@@ -50,72 +50,74 @@ LOC    OBJ              LINE   SOURCE
                         40     ; This block is a new subroutine that fixes the load routine to reflect the shared health upgrades.
                         41     ; Firstly add the upgrade values together to get the full highest shared health value.
 0BFF38 FAFFDF           42     ; LD A, $DFFF
-0BFF3B 0E10                    ; LD C, 10
-0BFF3D 91                      ; SUB C
-0BFF3E 47                      ; LD B, A
-0BFF3F FAFEDF                  ; LD A, $DFFE
-0BFF42 91                      ; SUB C
-0BFF43 80                      ; ADD A, B
-0BFF44 81                      ; ADD A, C
-0BFF45 EAD9C0                  ; LD $C0D9, A
-0BFF48 EADEC0                  ; LD $C0DE, A
-0BFF4B 4F                      ; LD C, A
-0BFF4C 0621                    ; LD B, 21
-0BFF4E FAD5C0                  ; LD A, $C0D5
-0BFF51 B8                      ; CP B
-0BFF52 3007                    ; JR NC +#7
-0BFF54 B9                      ; CP C
-0BFF55 3004                    ; JR NC +#4
-0BFF57 79                      ; LD A, C
-0BFF58 EAD5C0                  ; LD $C0D5, A
-0BFF5B FADAC0                  ; LD A, $C0DA
-0BFF5E B8                      ; CP B
-0BFF5F 3007                    ; JR NC +#7
-0BFF61 B9                      ; CP C
-0BFF62 3004                    ; JR NC +#4
-0BFF64 79                      ; LD A, C
-0BFF65 EADAC0                  ; LD $C0DA, A
-                               ; Going back on the original call
-0BFF68 CDA369                  ; CALL $69A3
-0BFF6B C9                      ; RET
+0BFF3B 0E10             43     ; LD C, 10
+0BFF3D 91               44     ; SUB C
+0BFF3E 47               45     ; LD B, A
+0BFF3F FAFEDF           46     ; LD A, $DFFE
+0BFF42 91               47     ; SUB C
+0BFF43 80               48     ; ADD A, B
+0BFF44 81               49     ; ADD A, C
+                        50     ; Insert this highest shared health value into the Max health offsets of both characters.
+0BFF45 EAD9C0           51     ; LD $C0D9, A
+0BFF48 EADEC0           52     ; LD $C0DE, A
+                        53     ; Then perform some tricks if for autosaves the current health exceeds the max health.
+0BFF4B 4F               54     ; LD C, A
+0BFF4C 0621             55     ; LD B, 21
+0BFF4E FAD5C0           56     ; LD A, $C0D5
+0BFF51 B8               57     ; CP B
+0BFF52 3007             58     ; JR NC +#7
+0BFF54 B9               59     ; CP C
+0BFF55 3004             60     ; JR NC +#4
+0BFF57 79               61     ; LD A, C
+0BFF58 EAD5C0           62     ; LD $C0D5, A
+0BFF5B FADAC0           63     ; LD A, $C0DA
+0BFF5E B8               64     ; CP B
+0BFF5F 3007             65     ; JR NC +#7
+0BFF61 B9               66     ; CP C
+0BFF62 3004             67     ; JR NC +#4
+0BFF64 79               68     ; LD A, C
+0BFF65 EADAC0           69     ; LD $C0DA, A
+                        70     ; Going back on the original call
+0BFF68 CDA369           71     ; CALL $69A3
+0BFF6B C9               72     ; RET
 ------
-                               ; This block fixes the saving code.
-                               ; Firstly we are going to look at whether the max value for Zero is less or equal, or more than 0x21 (0x20 being the highest full health value)
-0BFF6C 0E21                    ; LD C, 0x21
-0BFF6E FADAC0                  ; LD A, $C0DA
-0BFF71 B9                      ; CP C
-0BFF72 47                      ; LD B, A
-0BFF73 FAFFDF                  ; LD A, $DFFF
-0BFF76 3006                    ; JR NC +#6
-0BFF78 B8                      ; CP B
-0BFF79 3013                    ; JR NC +#19
-0BFF7B 47                      ; LD B, A
-0BFF7C 1810                    ; JR +#16
-0BFF7E 4F                      ; LD C, A
-0BFF7F FADEC0                  ; LD A, $C0DE
-0BFF82 91                      ; SUB C
-0BFF83 4F                      ; LD C, A
-0BFF84 FADEC0                  ; LD A, $C0DE
-0BFF87 91                      ; SUB C
-0BFF88 4F                      ; LD C, A
-0BFF89 78                      ; LD A, B
-0BFF8A 90                      ; SUB B
-0BFF8B 47                      ; LD B, A
-0BFF8C 0E21                    ; LD C, 0x21
-                               ; The same steps now repeated for X
-0BFF8E FAD5C0                  ; LD A, $C0D5
-0BFF91 B9                      ; CP C
-0BFF92 300C                    ; JR NC +#12
-0BFF94 4F                      ; LD C, A
-0BFF95 FAFEDF                  ; LD A, $DFFE
-0BFF98 B9                      ; CP C
-0BFF99 300F                    ; JR NC +#15
-0BFF9B FAD5C0                  ; LD A, $C0D5
-0BFF9E 180A                    ; JR +#10
-0BFFA0 4F                      ; LD C, A
-0BFFA1 FAD9C0                  ; LD A, $C0D9
-0BFFA4 91                      ; SUB C
-0BFFA5 4F                      ; LD C, A
-0BFFA6 FAD5C0                  ; LD A, $C0D5
-0BFFA9 91                      ; SUB C
-0BFFAA C9                      ; RET
+                        73     ; This block fixes the saving code.
+                        74     ; Firstly we are going to look at whether the max value for Zero is less or equal, or more than 0x21 (0x20 being the highest full health value)
+0BFF6C 0E21             75     ; LD C, 0x21
+0BFF6E FADAC0           76     ; LD A, $C0DA
+0BFF71 B9               77     ; CP C
+0BFF72 47               78     ; LD B, A
+0BFF73 FAFFDF           79     ; LD A, $DFFF
+0BFF76 3006             80     ; JR NC +#6
+0BFF78 B8               81     ; CP B
+0BFF79 3013             82     ; JR NC +#19
+0BFF7B 47               83     ; LD B, A
+0BFF7C 1810             84     ; JR +#16
+0BFF7E 4F               85     ; LD C, A
+0BFF7F FADEC0           86     ; LD A, $C0DE
+0BFF82 91               87     ; SUB C
+0BFF83 4F               88     ; LD C, A
+0BFF84 FADEC0           89     ; LD A, $C0DE
+0BFF87 91               90     ; SUB C
+0BFF88 4F               91     ; LD C, A
+0BFF89 78               92     ; LD A, B
+0BFF8A 90               93     ; SUB B
+0BFF8B 47               94     ; LD B, A
+0BFF8C 0E21             95     ; LD C, 0x21
+                        96     ; The same steps now repeated for X
+0BFF8E FAD5C0           97     ; LD A, $C0D5
+0BFF91 B9               98     ; CP C
+0BFF92 300C             99     ; JR NC +#12
+0BFF94 4F               100    ; LD C, A
+0BFF95 FAFEDF           101    ; LD A, $DFFE
+0BFF98 B9               102    ; CP C
+0BFF99 300F             103    ; JR NC +#15
+0BFF9B FAD5C0           104    ; LD A, $C0D5
+0BFF9E 180A             105    ; JR +#10
+0BFFA0 4F               106    ; LD C, A
+0BFFA1 FAD9C0           107    ; LD A, $C0D9
+0BFFA4 91               108    ; SUB C
+0BFFA5 4F               109    ; LD C, A
+0BFFA6 FAD5C0           110    ; LD A, $C0D5
+0BFFA9 91               111    ; SUB C
+0BFFAA C9               112    ; RET
