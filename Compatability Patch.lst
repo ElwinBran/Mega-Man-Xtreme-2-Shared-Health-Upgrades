@@ -50,34 +50,34 @@ LOC    OBJ              LINE   SOURCE
                         40     ; This block is a new subroutine that fixes the load routine to reflect the shared health upgrades.
                         41     ; Firstly add the upgrade values together to get the full highest shared health value.
 0BFF38 FAFFDF           42     ; LD A, $DFFF
-0E10 ; LD C, 10
-91 ; SUB C
-47 ; LD B, A
-FAFEDF            ; LD A, $DFFE
-91 ; SUB C
-80 ; ADD A, B
-81 ; ADD A, C
-0BFF43 EAD9C0                  ; LD $C0D9, A
-0BFF46 EADEC0                  ; LD $C0DE, A
-0BFF49 4F                      ; LD C, A
-0BFF4A 0621                    ; LD B, 21
-0BFF4C FAD5C0                  ; LD A, $C0D5
-0BFF4F B8                      ; CP B
-0BFF50 3007                    ; JR NC +#7
-0BFF52 B9                      ; CP C
-0BFF53 3004                    ; JR NC +#4
-0BFF55 79                      ; LD A, C
-0BFF56 EAD5C0                  ; LD $C0D5, A
-0BFF59 FADAC0                  ; LD A, $C0DA
-0BFF5C B8                      ; CP B
-0BFF5D 3007                    ; JR NC +#7
-0BFF5F B9                      ; CP C
-0BFF60 3004                    ; JR NC +#4
-0BFF62 79                      ; LD A, C
-0BFF63 EADAC0                  ; LD $C0DA, A
+0BFF3B 0E10                    ; LD C, 10
+0BFF3D 91                      ; SUB C
+0BFF3E 47                      ; LD B, A
+0BFF3F FAFEDF                  ; LD A, $DFFE
+0BFF42 91                      ; SUB C
+0BFF43 80                      ; ADD A, B
+0BFF44 81                      ; ADD A, C
+0BFF45 EAD9C0                  ; LD $C0D9, A
+0BFF48 EADEC0                  ; LD $C0DE, A
+0BFF4B 4F                      ; LD C, A
+0BFF4C 0621                    ; LD B, 21
+0BFF4E FAD5C0                  ; LD A, $C0D5
+0BFF51 B8                      ; CP B
+0BFF52 3007                    ; JR NC +#7
+0BFF54 B9                      ; CP C
+0BFF55 3004                    ; JR NC +#4
+0BFF57 79                      ; LD A, C
+0BFF58 EAD5C0                  ; LD $C0D5, A
+0BFF5B FADAC0                  ; LD A, $C0DA
+0BFF5E B8                      ; CP B
+0BFF5F 3007                    ; JR NC +#7
+0BFF61 B9                      ; CP C
+0BFF62 3004                    ; JR NC +#4
+0BFF64 79                      ; LD A, C
+0BFF65 EADAC0                  ; LD $C0DA, A
                                ; Going back on the original call
-0BFF66 CDA369                  ; CALL $69A3
-0BFF69 C9                      ; RET
+0BFF68 CDA369                  ; CALL $69A3
+0BFF6B C9                      ; RET
 ------
                                ; This block fixes the saving code.
                                ; Firstly we are going to look at whether the max value for Zero is less or equal, or more than 0x21 (0x20 being the highest full health value)
