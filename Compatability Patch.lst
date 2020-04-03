@@ -82,42 +82,54 @@ LOC    OBJ              LINE   SOURCE
 0BFF6B C9               72     ; RET
 ------
                         73     ; This block fixes the saving code.
-                        74     ; Firstly we are going to look at whether the max value for Zero is less or equal, or more than 0x21 (0x20 being the highest full health value)
-0BFF6C 0E21             75     ; LD C, 0x21
-0BFF6E FADAC0           76     ; LD A, $C0DA
-0BFF71 B9               77     ; CP C
-0BFF72 47               78     ; LD B, A
-0BFF73 FAFFDF           79     ; LD A, $DFFF
-0BFF76 3006             80     ; JR NC +#6
-0BFF78 B8               81     ; CP B
-0BFF79 3013             82     ; JR NC +#19
-0BFF7B 47               83     ; LD B, A
-0BFF7C 1810             84     ; JR +#16
-0BFF7E 4F               85     ; LD C, A
-0BFF7F FADEC0           86     ; LD A, $C0DE
-0BFF82 91               87     ; SUB C
-0BFF83 4F               88     ; LD C, A
-0BFF84 FADEC0           89     ; LD A, $C0DE
-0BFF87 91               90     ; SUB C
-0BFF88 4F               91     ; LD C, A
-0BFF89 78               92     ; LD A, B
-0BFF8A 90               93     ; SUB B
-0BFF8B 47               94     ; LD B, A
-0BFF8C 0E21             95     ; LD C, 0x21
-                        96     ; The same steps now repeated for X
-0BFF8E FAD5C0           97     ; LD A, $C0D5
-0BFF91 B9               98     ; CP C
-0BFF92 300C             99     ; JR NC +#12
-0BFF94 4F               100    ; LD C, A
-0BFF95 FAFEDF           101    ; LD A, $DFFE
-0BFF98 B9               102    ; CP C
-0BFF99 300F             103    ; JR NC +#15
-0BFF9B FAD5C0           104    ; LD A, $C0D5
-0BFF9E 180A             105    ; JR +#10
-0BFFA0 4F               106    ; LD C, A
-0BFFA1 FAD9C0           107    ; LD A, $C0D9
-0BFFA4 91               108    ; SUB C
-0BFFA5 4F               109    ; LD C, A
-0BFFA6 FAD5C0           110    ; LD A, $C0D5
-0BFFA9 91               111    ; SUB C
-0BFFAA C9               112    ; RET
+                        74     ; First we check if the shadow value for Zero is set, set them to 0x10, the starting health.
+0BFF6C FAFFDF           75     ; LD A, ($DFFF)
+0BFF6F FE00             76     ; CP 0x00
+0BFF71 2005             77     ; JR NZ +#5
+0BFF73 3E10             78     ; LD A, 0x10
+0BFF75 EAFFDF           79     ; LD ($DFFF), A
+                        80     ; Then we are going to look at whether the max value for Zero is less or equal, or more than 0x21 (0x20 being the highest full health value)
+0BFF78 0E21             81     ; LD C, 0x21
+0BFF7A FADAC0           82     ; LD A, ($C0DA)
+0BFF7D B9               83     ; CP C
+0BFF7E 47               84     ; LD B, A
+0BFF7F FAFFDF           85     ; LD A, ($DFFF)
+0BFF82 3006             86     ; JR NC +#6
+0BFF84 B8               87     ; CP B
+0BFF85 3013             88     ; JR NC +#19
+0BFF87 47               89     ; LD B, A
+0BFF88 1810             90     ; JR +#16
+0BFF8A 4F               91     ; LD C, A
+0BFF8B FADEC0           92     ; LD A, ($C0DE)
+0BFF8E 91               93     ; SUB C
+0BFF8F 4F               94     ; LD C, A
+0BFF90 FADEC0           95     ; LD A, ($C0DE)
+0BFF93 91               96     ; SUB C
+0BFF94 4F               97     ; LD C, A
+0BFF95 78               98     ; LD A, B
+0BFF96 90               99     ; SUB B
+0BFF97 47               100    ; LD B, A
+0BFF98 0E21             101    ; LD C, 0x21
+                        102    ; The same steps now repeated for X
+                        103    ; First we check if the shadow value for X is set, set them to 0x10, the starting health.
+0BFF9A FAFEDF           104    ; LD A, ($DFFE)
+0BFF9D FE00             105    ; CP 0x00
+0BFF9F 2005             106    ; JR NZ +#5
+0BFFA1 3E10             107    ; LD A, 0x10
+0BFFA3 EAFEDF           108    ; LD ($DFFE), A
+0BFFA6 FAD5C0           109    ; LD A, ($C0D5)
+0BFFA9 B9               110    ; CP C
+0BFFAA 300C             111    ; JR NC +#12
+0BFFAC 4F               112    ; LD C, A
+0BFFAD FAFEDF           113    ; LD A, ($DFFE)
+0BFFB0 B9               114    ; CP C
+0BFFB1 300F             115    ; JR NC +#15
+0BFFB3 FAD5C0           116    ; LD A, ($C0D5)
+0BFFB6 180A             117    ; JR +#10
+0BFFB8 4F               118    ; LD C, A
+0BFFB9 FAD9C0           119    ; LD A, ($C0D9)
+0BFFBC 91               120    ; SUB C
+0BFFBD 4F               121    ; LD C, A
+0BFFBE FAD5C0           122    ; LD A, ($C0D5)
+0BFFC1 91               123    ; SUB C
+0BFFC2 C9               124    ; RET
