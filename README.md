@@ -1,7 +1,4 @@
 # Mega Man Xtreme 2: Shared Health Upgrades
-Two patches for Mega Man Xtreme 2 to make the health upgrades shared over both player characters.
-
-# Mega Man Xtreme Xtreme Mode from Start
 <b>!!!!Still a Work in progress project!!!!</b>
 <br>Two patches for Mega Man Xtreme 2 to make the health upgrades shared over both player characters.
 A detailed description can be found [on the RomHacking page of this hack](https://www.romhacking.net/hacks/5032/), as well as an alternative download link.
