@@ -2,8 +2,8 @@
 Two patches for Mega Man Xtreme 2 to make the health upgrades shared over both player characters.
 
 # Mega Man Xtreme Xtreme Mode from Start
-!!!!Still a Work in progress project!!!!
-Two patches for Mega Man Xtreme 2 to make the health upgrades shared over both player characters.
+<b>!!!!Still a Work in progress project!!!!</b>
+<br>Two patches for Mega Man Xtreme 2 to make the health upgrades shared over both player characters.
 A detailed description can be found [on the RomHacking page of this hack](https://www.romhacking.net/hacks/5032/), as well as an alternative download link.
 In this README you will find further information on how this patch was made and reference material.
 
@@ -37,8 +37,8 @@ This oversight was a result of shallow testing and poor conceptualizing.
 The fix however, proved rather easy, simply by building in some extra code into the saving mechanism. 
 
 ### 1.0.3
-!!!! Work in progress, process of a future release!!!!
-G3OFF continued testing the 1.0.2 version and found even bigger issues. The game contained a progression system from one mode to the next. The patch however, did not take this into account. Furthermore the 'global' health sharing behaviour seemed to be inappropriate to be global for every mode. 
+<b>!!!! Work in progress, process of a future release!!!!</b>
+<br>G3OFF continued testing the 1.0.2 version and found even bigger issues. The game contained a progression system from one mode to the next. The patch however, did not take this into account. Furthermore the 'global' health sharing behaviour seemed to be inappropriate to be global for every mode. 
 
 Precursory work was done to check how to address the issue properly.
 There turned out to be a lot of unknowns and the patch would have to include a few exception cases to apply ONLY to the 'Xtreme' gamemode. 
