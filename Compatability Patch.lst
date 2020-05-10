@@ -1,28 +1,58 @@
 LOC    OBJ              LINE   SOURCE
                         1      ; This part is nested within Rom bank D, responsibility is to adding the health upgrade to the characters.
 ------
-                        2      ; This first block mostly overrides original code.
-                        3      ; Override the maximum health of both characters (0xC0D9, 0xC0DE for X and Zero respectively)
-036FFA EAD9C0           4      ; LD ($C0D9), A
-036FFD EADEC0           5      ; LD ($C0DE), A
-                        6      ; Check which character is active
-037000 FAC9C0           7      ; LD A, ($C0C9)
-037003 A7               8      ; AND A
-037004 2009             9      ; JR NZ, +#9
-                        10     ; First case: set the shadow value of X's health to the current health.
-037006 FA84C0           11     ; LD A, ($C084)
-037009 EAFEDF           12     ; LD ($DFFE), A
-03700C 1804             13     ; JR, +#4
-                        14     ; padding
-03700E 00               15     ; NOP
-                        16     ; Second case: call extra block to fix Zero's maximum health, if he picked the upgrade up.
-03700F CDF17D           17     ; CALL $7DF1
+                        2      ; check the game mode and branch to the routines in free space accordingly.
+036FFA FA04C0           3      ; LD A, ($C004)
+                        4      ; 0x03 is the Xtreme Mode value.
+036FFD FE03             5      ; CP #03
+036FFF C2F17D           6      ; JP NZ, $7DF1 
+037002 C30C7E           7      ; JP $7E0C
+                        8      ; Padding where original code was 
+037005 00               9      ; NOP
+037006 00               10     ; NOP
+037007 00               11     ; NOP
+037008 00               12     ; NOP
+037009 00               13     ; NOP
+03700A 00               14     ; NOP
+03700B 00               15     ; NOP
+03700C 00               16     ; NOP
+03700D 00               17     ; NOP
+03700E 00               18     ; NOP
+03700F 00               19     ; NOP
+037010 00               20     ; NOP
+037011 00               21     ; NOP
 ------
-                        18     ; This second block is an extra function needed to ensure Zero's health is corrected. 
-                        19     ; This is 0x7DF1 at runtime; load Zero's current health and store it in the shadow value for Zero
-037DF1 FA84C0           20     ; LD A, ($C084)
-037DF4 EAFFDF           21     ; LD ($DFFF), A
-037DF7 C9               22     ; RET
+                        22     ; This is 0x7DF1 at runtime, this routine is a copy of the original code and returns to original code.
+037DF1 FAC9C0           23     ; LD A, ($C0C9)
+037DF4 A7               24     ; AND A
+037DF5 200A             25     ; JR NZ +#A
+037DF7 FAD9C0           26     ; LD, ($C0D9)
+037DFA C602             27     ; ADD A, 0x02
+037DFC EAD9C0           28     ; LD ($C0D9), A
+037DFF 1808             29     ; JR +#8
+037E01 FADEC0           30     ; LD A, ($C0DE)
+037E04 C602             31     ; ADD A, 0x02
+037E06 EADEC0           32     ; LD ($C0DE), A
+037E09 C31270           33     ; JP $7012
+------
+                        34     ; This is 0x7E0C at runtime, the second routine, for Xtreme Mode.
+                        35     ; Override the maximum health of both characters (0xC0D9, 0xC0DE for X and Zero respectively)
+037E0C FA84C0           36     ; LD A, ($C084)
+037E0F EAD9C0           37     ; LD ($C0D9), A
+037E12 EADEC0           38     ; LD ($C0DE), A
+                        39     ; Check which character is active
+037E15 FAC9C0           40     ; LD A, ($C0C9)
+037E18 A7               41     ; AND A
+037E19 2008             42     ; JR NZ, +#8
+                        43     ; First case: set the shadow value of X's health to the current health.
+037E1B FA84C0           44     ; LD A, ($C084)
+037E1E EAFEDF           45     ; LD ($DFFE), A
+037E21 1806             46     ; JR, +#6 go to after Zero
+                        47     ; Second case: call extra block to fix Zero's maximum health, if he picked the upgrade up.
+                        48     ; This is 0x7DF1 at runtime; load Zero's current health and store it in the shadow value for Zero
+037E23 FA84C0           49     ; LD A, ($C084)
+037E26 EAFFDF           50     ; LD ($DFFF), A
+037E29 C31270           51     ; JP $7012
 ------
 ------
                         23     ; This part is in the Rom bank 2F, which overall handles the saving and loading of the SRAM.
