@@ -55,19 +55,63 @@ LOC    OBJ              LINE   SOURCE
 037E29 C31270           51     ; JP $7012
 ------
 ------
-                        23     ; This part is in the Rom bank 2F, which overall handles the saving and loading of the SRAM.
+                        52     ; This part is in the Rom bank 2F, which overall handles the saving and loading of the SRAM.
 ------
-                        24     ; Instead of loading the SRAM max health to the original offset for X (0xC0D9), load it to shadow value 0xDFFE
-0BE59A EAFEDF           25     ; LD ($DFFE), A
+                        53     ; Instead of loading the SRAM max health to the original offset for X (0xC0D9), load it to shadow value 0xDFFE
+0BE59A EAFEDF           54     ; LD ($DFFE), A
 ------
-                        26     ; Instead of loading the SRAM max health to the original offset for Zero (0xC0DE), load it to shadow value 0xDFFF
-0BE5B2 EAFFDF           27     ; LD ($DFFF), A
+                        55     ; Instead of loading the SRAM max health to the original offset for Zero (0xC0DE), load it to shadow value 0xDFFF
+0BE5B2 EAFFDF           56     ; LD ($DFFF), A
 ------
-                        28     ; Takes the place of another subroutine, see the code at 0x0BFF38 (line 40)
-0BE618 CD387F           29     ; CALL $7F38
+                        57     ; Takes the place of another subroutine, see the code at 0x0BFF38 (line 61)
+0BE618 CD387F           58     ; CALL $7F38
+------
+                        59     ; This block is a new subroutine that fixes the load routine to reflect the shared health upgrades.
+                        60     ; First check the game mode 
+0BFF38 FA04C0           61     ; LD A, ($C004)
+0BFF3B FE03             62     ; CP #03
+0BFF3D FAFFDF           63     ; LD A, ($DFFF)
+0BFF40 280B             64     ; JR Z, +#0B
+                        65     ; Put shadow values back into original destinations 
+0BFF42 EADEC0           66     ; LD ($C0DE), A
+0BFF45 FAFEDF           67     ; LD A, ($DFFE)
+0BFF48 EAD9C0           68     ; LD ($C0D9), A
+                        69     ; skip to the end, calling back into original code.
+0BFF4B 182D             70     ; JR +#2D
+                        71     ; Shared health code: Firstly add the upgrade values together to get the full highest shared health value.
+0BFF4D 0E10             72     ; LD C, 10
+0BFF4F 91               73     ; SUB C
+0BFF50 47               74     ; LD B, A
+0BFF51 FAFEDF           75     ; LD A, $DFFE
+0BFF54 91               76     ; SUB C
+0BFF55 80               77     ; ADD A, B
+0BFF56 81               78     ; ADD A, C
+                        79     ; Insert this highest shared health value into the Max health offsets of both characters.
+0BFF57 EAD9C0           80     ; LD $C0D9, A
+0BFF5A EADEC0           81     ; LD $C0DE, A
+                        82     ; Then perform some tricks if for autosaves the current health exceeds the max health.
+0BFF5D 4F               83     ; LD C, A
+0BFF5E 0621             84     ; LD B, 21
+0BFF60 FAD5C0           85     ; LD A, $C0D5
+0BFF63 B8               86     ; CP B
+0BFF64 3007             87     ; JR NC +#7
+0BFF66 B9               88     ; CP C
+0BFF67 3004             89     ; JR NC +#4
+0BFF69 79               90     ; LD A, C
+0BFF6A EAD5C0           91     ; LD $C0D5, A
+0BFF6D FADAC0           92     ; LD A, $C0DA
+0BFF70 B8               93     ; CP B
+0BFF71 3007             94     ; JR NC +#7
+0BFF73 B9               95     ; CP C
+0BFF74 3004             96     ; JR NC +#4
+0BFF76 79               97     ; LD A, C
+0BFF77 EADAC0           98     ; LD $C0DA, A
+                        99     ; Going back on the original call
+0BFF7A CDA369           100    ; CALL $69A3
+0BFF7D C9               101    ; RET
 ------
                         30     ; This block affects the saving code
-                        31     ; The subroutine ensures the registers contain the right values of health, see the code at 0x0B()
+                        31     ; The subroutine ensures the registers contain the right values of health, see the code at 0x0BFF6C
 0BE7F9 CD6C7F           32     ; CALL $7F6C
 0BE7FD FAFEDF           33     ; LD A, $DFFE
                         34     ; a small section of original code that shouldnt be overwritten and thus isnt in this patch file.
@@ -76,40 +120,6 @@ LOC    OBJ              LINE   SOURCE
 0BE812 00               37     ; NOP
 0BE813 78               38     ; LD A, B
 0BE814 FAFFDF           39     ; LD ($DFFF), A
-------
-                        40     ; This block is a new subroutine that fixes the load routine to reflect the shared health upgrades.
-                        41     ; Firstly add the upgrade values together to get the full highest shared health value.
-0BFF38 FAFFDF           42     ; LD A, $DFFF
-0BFF3B 0E10             43     ; LD C, 10
-0BFF3D 91               44     ; SUB C
-0BFF3E 47               45     ; LD B, A
-0BFF3F FAFEDF           46     ; LD A, $DFFE
-0BFF42 91               47     ; SUB C
-0BFF43 80               48     ; ADD A, B
-0BFF44 81               49     ; ADD A, C
-                        50     ; Insert this highest shared health value into the Max health offsets of both characters.
-0BFF45 EAD9C0           51     ; LD $C0D9, A
-0BFF48 EADEC0           52     ; LD $C0DE, A
-                        53     ; Then perform some tricks if for autosaves the current health exceeds the max health.
-0BFF4B 4F               54     ; LD C, A
-0BFF4C 0621             55     ; LD B, 21
-0BFF4E FAD5C0           56     ; LD A, $C0D5
-0BFF51 B8               57     ; CP B
-0BFF52 3007             58     ; JR NC +#7
-0BFF54 B9               59     ; CP C
-0BFF55 3004             60     ; JR NC +#4
-0BFF57 79               61     ; LD A, C
-0BFF58 EAD5C0           62     ; LD $C0D5, A
-0BFF5B FADAC0           63     ; LD A, $C0DA
-0BFF5E B8               64     ; CP B
-0BFF5F 3007             65     ; JR NC +#7
-0BFF61 B9               66     ; CP C
-0BFF62 3004             67     ; JR NC +#4
-0BFF64 79               68     ; LD A, C
-0BFF65 EADAC0           69     ; LD $C0DA, A
-                        70     ; Going back on the original call
-0BFF68 CDA369           71     ; CALL $69A3
-0BFF6B C9               72     ; RET
 ------
                         73     ; This block fixes the saving code.
                         74     ; First we check if the shadow value for Zero is set, set them to 0x10, the starting health.
