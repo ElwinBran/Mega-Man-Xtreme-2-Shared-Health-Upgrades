@@ -180,24 +180,24 @@ LOC    OBJ              LINE   SOURCE
 0BFFCC FE00             166    ; CP 0x00
 0BFFCE 2005             167    ; JR NZ +#5
 0BFFD0 3E10             168    ; LD A, 0x10
-0BFFD1 EAFFDF           169    ; LD ($DFFF), A
+0BFFD2 EAFFDF           169    ; LD ($DFFF), A
                         170    ; Retrieve current Zero health and make sure its compatible with normal savings.
-0BFFD4 FADAC0           171    ; LD A, ($C0DA)
-0BFFD7 B9               172    ; CP C
-0BFFD8 300C             173    ; JR NC +#12
-0BFFDA 4F               174    ; LD C, A
-0BFFDB FAFFDF           175    ; LD A, ($DFFF)
-0BFFDE B9               176    ; CP C
-0BFFDF 300F             177    ; JR NC +#15
-0BFFE1 FADAC0           178    ; LD A, ($C0DA)
-0BFFE4 180A             179    ; JR +#10
-0BFFE6 4F               180    ; LD C, A
-0BFFE7 FADEC0           181    ; LD A, ($C0DE)
-0BFFEA 91               182    ; SUB C
-0BFFEB 4F               183    ; LD C, A
-0BFFEC FADAC0           184    ; LD A, ($C0DA)
-0BFFEF 91               185    ; SUB C
+0BFFD5 FADAC0           171    ; LD A, ($C0DA)
+0BFFD8 B9               172    ; CP C
+0BFFD9 300C             173    ; JR NC +#12
+0BFFDB 4F               174    ; LD C, A
+0BFFDC FAFFDF           175    ; LD A, ($DFFF)
+0BFFDF B9               176    ; CP C
+0BFFE0 300F             177    ; JR NC +#15
+0BFFE2 FADAC0           178    ; LD A, ($C0DA)
+0BFFE5 180A             179    ; JR +#10
+0BFFE7 4F               180    ; LD C, A
+0BFFE8 FADEC0           181    ; LD A, ($C0DE)
+0BFFEB 91               182    ; SUB C
+0BFFEC 4F               183    ; LD C, A
+0BFFED FADAC0           184    ; LD A, ($C0DA)
+0BFFF0 91               185    ; SUB C
                         186    ; Write the calculated value to the saving and then write X's compatible max health to the save as well.
-0BFFF0 22               187    ; LDI (HL), A
-0BFFF1 FAFFDF           188    ; LD A, ($DFFF)
-0BFFF4 C31868           189    ; JP $6818
+0BFFF1 22               187    ; LDI (HL), A
+0BFFF2 FAFFDF           188    ; LD A, ($DFFF)
+0BFFF5 C31868           189    ; JP $6818
