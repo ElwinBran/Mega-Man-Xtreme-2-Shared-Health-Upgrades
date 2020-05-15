@@ -1,15 +1,36 @@
 LOC    OBJ              LINE   SOURCE
-                        1      ; First load the max health into the offsets for both characters.
-036FFA EAD9C0           2      ; LD $C0D9, A
-036FFD EADEC0           3      ; LD $C0DE, A
-                        4      ; Check which character is active
-037000 FAC9C0           5      ; LD A, $C0C9
-037003 A7               6      ; AND A
-037004 FA84C0           7      ; LD A, $C084
-                        8      ; Only add the extra current health to the current characters value (0xC0D5 is X, 0xC0DA is Zero).
-037007 2005             9      ; JR NZ +#5
-037009 EAD5C0           10     ; LD $C0D5, A
-03700C 1804             11     ; JR +#4
-03700E EADAC0           12     ; LD $C0DA, A
-                        13     ; Padding and resume original code afterwards.
-037011 00               14     ; NOP
+                        1      ; Check the game mode and branch to either original code copied to free space or patch code.
+036FFA FA04C0           2      ; LD A, ($C004)
+                        3      ; 0x03 is the Xtreme Mode value.
+036FFD FE03             4      ; CP #03
+036FFF C2F17D           5      ; JP NZ, $7DF1 
+                        6      ; Shared health code starts here; First load the max health into the offsets for both characters.
+037002 FA84C0           7      ; LD A, ($C084)
+037005 EAD9C0           8      ; LD $C0D9, A
+037008 EADEC0           9      ; LD $C0DE, A
+                        10     ; Check which character is active
+03700B FAC9C0           11     ; LD A, $C0C9
+03700E A7               12     ; AND A
+03700F CD0C7E           13     ; CALL $7E0C
+------
+                        14     ; This is 0x7DF1 at runtime, this routine is a copy of the original code and returns to original code.
+037DF1 FAC9C0           15     ; LD A, ($C0C9)
+037DF4 A7               16     ; AND A
+037DF5 200A             17     ; JR NZ +#A
+037DF7 FAD9C0           18     ; LD, ($C0D9)
+037DFA C602             19     ; ADD A, 0x02
+037DFC EAD9C0           20     ; LD ($C0D9), A
+037DFF 1808             21     ; JR +#8
+037E01 FADEC0           22     ; LD A, ($C0DE)
+037E04 C602             23     ; ADD A, 0x02
+037E06 EADEC0           24     ; LD ($C0DE), A
+037E09 C31270           25     ; JP $7012
+------
+                        26     ; Continuation of the patch code in free space (0x7E0C) at runtime.
+037E0C FA84C0           27     ; LD A, $C084
+                        28     ; Only add the extra current health to the current characters value (0xC0D5 is X, 0xC0DA is Zero).
+037E0F 2005             29     ; JR NZ +#5
+037E11 EAD5C0           30     ; LD $C0D5, A
+037E14 1804             31     ; JR +#4
+037E16 EADAC0           32     ; LD $C0DA, A
+037E19 C9               33     ; RET
