@@ -33,7 +33,7 @@ This oversight was a result of shallow testing and poor conceptualizing.
 The fix however, proved rather easy, simply by building in some extra code into the saving mechanism. 
 
 ### 1.0.3
-<br>G3OFF continued testing the 1.0.2 version and found even bigger issues. The game contained a progression system from one mode to the next. The patch however, did not take this into account. Furthermore the 'global' health sharing behaviour seemed to be inappropriate to be global for every mode. 
+G3OFF continued testing the 1.0.2 version and found even bigger issues. The game contained a progression system from one mode to the next. The patch however, did not take this into account. Furthermore the 'global' health sharing behaviour seemed to be inappropriate to be global for every mode. 
 
 Precursory work was done to check how to address the issue properly.
 There turned out to be a lot of unknowns and the patch would have to include a few exception cases to apply ONLY to the 'Xtreme' gamemode. 
