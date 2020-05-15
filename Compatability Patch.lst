@@ -113,7 +113,7 @@ LOC    OBJ              LINE   SOURCE
                         30     ; This block affects the saving code
                         31     ; The subroutine ensures the registers contain the right values of health, see the code at 0x0BFF6C
 0BE7F9 CD6C7F           32     ; CALL $7F6C
-0BE7FD FAFEDF           33     ; LD A, $DFFE
+0BE7FC FAFEDF           33     ; LD A, $DFFE
                         34     ; a small section of original code that shouldnt be overwritten and thus isnt in this patch file.
                         35     ; After resuming most code normally, filler is used and then the real (compatible) max health value is stored via register B.
 0BE811 00               36     ; NOP
