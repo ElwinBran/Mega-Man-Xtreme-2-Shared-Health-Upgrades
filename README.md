@@ -39,7 +39,9 @@ The fix however, proved rather easy, simply by building in some extra code into 
 
 Precursory work was done to check how to address the issue properly.
 There turned out to be a lot of unknowns and the patch would have to include a few exception cases to apply ONLY to the 'Xtreme' gamemode. 
-After this roadblock it was decided to take a break from the project and approach it later with a fresh perspective 
+After this roadblock it was decided to take a break from the project and approach it later with a fresh perspective .
+
+[Patch making utility was created](https://github.com/ElwinBran/LSTPatchMaker), which made the editing process easier and enabled it to think of the code first instead of edits. A value in memory was found that represents the gamemode and both patches were going to be rewritten with a check to this value built in. Once the patches were completed testing was required.
 
 ## References
 The same references as the other Xtreme projects:
