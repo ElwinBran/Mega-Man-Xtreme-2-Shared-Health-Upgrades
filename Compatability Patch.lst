@@ -110,66 +110,94 @@ LOC    OBJ              LINE   SOURCE
 0BFF7A CDA369           100    ; CALL $69A3
 0BFF7D C9               101    ; RET
 ------
-                        30     ; This block affects the saving code
-                        31     ; The subroutine ensures the registers contain the right values of health, see the code at 0x0BFF6C
-0BE7F9 CD6C7F           32     ; CALL $7F6C
-0BE7FC FAFEDF           33     ; LD A, $DFFE
-                        34     ; a small section of original code that shouldnt be overwritten and thus isnt in this patch file.
-                        35     ; After resuming most code normally, filler is used and then the real (compatible) max health value is stored via register B.
-0BE811 00               36     ; NOP
-0BE812 00               37     ; NOP
-0BE813 78               38     ; LD A, B
-0BE814 FAFFDF           39     ; LD ($DFFF), A
 ------
-                        73     ; This block fixes the saving code.
-                        74     ; First we check if the shadow value for Zero is set, set them to 0x10, the starting health.
-0BFF6C FAFFDF           75     ; LD A, ($DFFF)
-0BFF6F FE00             76     ; CP 0x00
-0BFF71 2005             77     ; JR NZ +#5
-0BFF73 3E10             78     ; LD A, 0x10
-0BFF75 EAFFDF           79     ; LD ($DFFF), A
-                        80     ; Then we are going to look at whether the max value for Zero is less or equal, or more than 0x21 (0x20 being the highest full health value)
-0BFF78 0E21             81     ; LD C, 0x21
-0BFF7A FADAC0           82     ; LD A, ($C0DA)
-0BFF7D B9               83     ; CP C
-0BFF7E 47               84     ; LD B, A
-0BFF7F FAFFDF           85     ; LD A, ($DFFF)
-0BFF82 3006             86     ; JR NC +#6
-0BFF84 B8               87     ; CP B
-0BFF85 3013             88     ; JR NC +#19
-0BFF87 47               89     ; LD B, A
-0BFF88 1810             90     ; JR +#16
-0BFF8A 4F               91     ; LD C, A
-0BFF8B FADEC0           92     ; LD A, ($C0DE)
-0BFF8E 91               93     ; SUB C
-0BFF8F 4F               94     ; LD C, A
-0BFF90 FADEC0           95     ; LD A, ($C0DE)
-0BFF93 91               96     ; SUB C
-0BFF94 4F               97     ; LD C, A
-0BFF95 78               98     ; LD A, B
-0BFF96 90               99     ; SUB B
-0BFF97 47               100    ; LD B, A
-0BFF98 0E21             101    ; LD C, 0x21
-                        102    ; The same steps now repeated for X
-                        103    ; First we check if the shadow value for X is set, set them to 0x10, the starting health.
-0BFF9A FAFEDF           104    ; LD A, ($DFFE)
-0BFF9D FE00             105    ; CP 0x00
-0BFF9F 2005             106    ; JR NZ +#5
-0BFFA1 3E10             107    ; LD A, 0x10
-0BFFA3 EAFEDF           108    ; LD ($DFFE), A
-0BFFA6 FAD5C0           109    ; LD A, ($C0D5)
-0BFFA9 B9               110    ; CP C
-0BFFAA 300C             111    ; JR NC +#12
-0BFFAC 4F               112    ; LD C, A
-0BFFAD FAFEDF           113    ; LD A, ($DFFE)
-0BFFB0 B9               114    ; CP C
-0BFFB1 300F             115    ; JR NC +#15
-0BFFB3 FAD5C0           116    ; LD A, ($C0D5)
-0BFFB6 180A             117    ; JR +#10
-0BFFB8 4F               118    ; LD C, A
-0BFFB9 FAD9C0           119    ; LD A, ($C0D9)
-0BFFBC 91               120    ; SUB C
-0BFFBD 4F               121    ; LD C, A
-0BFFBE FAD5C0           122    ; LD A, ($C0D5)
-0BFFC1 91               123    ; SUB C
-0BFFC2 C9               124    ; RET
+                        102    ; This block affects the saving code
+                        103    ; First check the game mode again and branch accordingly
+0BE7F9 FA04C0           104    ; LD A, ($C004)
+0BE7FC FE03             105    ; CP #03
+0BE7FE CA8C7F           106    ; JP Z, $7F8C
+                        107    ; Part of the original code when the game mode is not Extreme
+0BE801 FAD5C0           108    ; LD A, ($C0D5)
+0BE804 22               109    ; LDI (HL), A
+0BE805 FAD9C0           110    ; LD A, ($C0D9)
+0BE808 22               111    ; LDI (HL), A
+0BE809 FAD8C0           112    ; LD A, ($C0D8)
+0BE80C 22               113    ; LDI (HL), A
+0BE80D FAD6C0           114    ; LD A, ($C0D6)
+0BE810 22               115    ; LDI (HL), A
+0BE811 FAD7C0           116    ; LD A, ($C0D7)
+0BE814 22               117    ; LDI (HL), A
+                        118    ; jump to the remaining original code, after which normal execution is resumed.
+0BE815 C37E7F           119    ; JP $7F7E
+------
+                        120    ; 0x7F7E at runtime, executes original code and jumps back to saving code.
+0BFF7E FAA0C0           121    ; LD A, ($C0A0)
+0BFF81 22               122    ; LDI (HL), A
+0BFF82 FADAC0           125    ; LD A, ($C0DA)
+0BFF85 22               124    ; LDI (HL), A
+0BFF86 FADEC0           125    ; LD A, ($C0DE)
+0BFF89 C31868           126    ; JP $6818
+------
+                        127    ; 0x7F8C at runtime, executes patch saving compatability code and returns to normal code.
+0BFF8C FAFEDF           128    ; LD A, DFFE
+                        129    ; Ensure X's shadow health value is 0x10 or above (starting a new game leaves the shadow at 0x00)
+0BFF8F FE00             130    ; CP 0x00
+0BFF91 2005             131    ; JR NZ +#5
+0BFF93 3E10             132    ; LD A, 0x10
+0BFF95 EAFEDF           133    ; LD ($DFFE), A
+                        134    ; Retrieve current X health and make sure its compatible with normal savings.
+0BFF98 FAD5C0           135    ; LD A, ($C0D5)
+0BFF9B B9               136    ; CP C
+0BFF9C 300C             137    ; JR NC +#12
+0BFF9E 4F               138    ; LD C, A
+0BFF9F FAFEDF           139    ; LD A, ($DFFE)
+0BFFA2 B9               140    ; CP C
+0BFFA3 300F             141    ; JR NC +#15
+0BFFA5 FAD5C0           142    ; LD A, ($C0D5)
+0BFFA8 180A             143    ; JR +#10
+0BFFAA 4F               144    ; LD C, A
+0BFFAB FAD9C0           145    ; LD A, ($C0D9)
+0BFFAE 91               146    ; SUB C
+0BFFAF 4F               147    ; LD C, A
+0BFFB0 FAD5C0           148    ; LD A, ($C0D5)
+0BFFB3 91               149    ; SUB C
+                        150    ; Write the calculated value to the saving and then write X's compatible max health to the save as well.
+0BFFB4 22               151    ; LDI (HL), A
+0BFFB5 FAFEDF           152    ; LD A, ($DFFE)
+0BFFB8 22               153    ; LDI (HL), A
+                        154    ; Original saving code until line 163
+0BFFB9 FAD8C0           155    ; LD A, ($C0D8)
+0BFFBC 22               156    ; LDI (HL), A
+0BFFBD FAD6C0           157    ; LD A, ($C0D6)
+0BFFC0 22               158    ; LDI (HL), A
+0BFFC1 FAD7C0           159    ; LD A, ($C0D7)
+0BFFC4 22               160    ; LDI (HL), A
+0BFFC5 FAA0C0           161    ; LD A, ($C0A0)
+0BFFC8 22               162    ; LDI (HL), A
+                        163    ; Now the same code but for Zero's data to be saved.
+0BFFC9 FAFFDF           164    ; LD A, DFFF
+                        165    ; Ensure Zero's shadow health value is 0x10 or above (starting a new game leaves the shadow at 0x00)
+0BFFCC FE00             166    ; CP 0x00
+0BFFCE 2005             167    ; JR NZ +#5
+0BFFD0 3E10             168    ; LD A, 0x10
+0BFFD1 EAFFDF           169    ; LD ($DFFF), A
+                        170    ; Retrieve current Zero health and make sure its compatible with normal savings.
+0BFFD4 FADAC0           171    ; LD A, ($C0DA)
+0BFFD7 B9               172    ; CP C
+0BFFD8 300C             173    ; JR NC +#12
+0BFFDA 4F               174    ; LD C, A
+0BFFDB FAFFDF           175    ; LD A, ($DFFF)
+0BFFDE B9               176    ; CP C
+0BFFDF 300F             177    ; JR NC +#15
+0BFFE1 FADAC0           178    ; LD A, ($C0DA)
+0BFFE4 180A             179    ; JR +#10
+0BFFE6 4F               180    ; LD C, A
+0BFFE7 FADEC0           181    ; LD A, ($C0DE)
+0BFFEA 91               182    ; SUB C
+0BFFEB 4F               183    ; LD C, A
+0BFFEC FADAC0           184    ; LD A, ($C0DA)
+0BFFEF 91               185    ; SUB C
+                        186    ; Write the calculated value to the saving and then write X's compatible max health to the save as well.
+0BFFF0 22               187    ; LDI (HL), A
+0BFFF1 FAFFDF           188    ; LD A, ($DFFF)
+0BFFF4 C31868           189    ; JP $6818
