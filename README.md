@@ -1,5 +1,4 @@
 # Mega Man Xtreme 2: Shared Health Upgrades
-<b>!!!!Still a Work in progress project!!!!</b>
 <br>Two patches for Mega Man Xtreme 2 to make the health upgrades shared over both player characters.
 A detailed description can be found [on the RomHacking page of this hack](https://www.romhacking.net/hacks/5032/), as well as an alternative download link.
 In this README you will find further information on how this patch was made and reference material.
@@ -34,7 +33,6 @@ This oversight was a result of shallow testing and poor conceptualizing.
 The fix however, proved rather easy, simply by building in some extra code into the saving mechanism. 
 
 ### 1.0.3
-<b>!!!! Work in progress, process of a future release!!!!</b>
 <br>G3OFF continued testing the 1.0.2 version and found even bigger issues. The game contained a progression system from one mode to the next. The patch however, did not take this into account. Furthermore the 'global' health sharing behaviour seemed to be inappropriate to be global for every mode. 
 
 Precursory work was done to check how to address the issue properly.
@@ -42,6 +40,11 @@ There turned out to be a lot of unknowns and the patch would have to include a f
 After this roadblock it was decided to take a break from the project and approach it later with a fresh perspective .
 
 [Patch making utility was created](https://github.com/ElwinBran/LSTPatchMaker), which made the editing process easier and enabled it to think of the code first instead of edits. A value in memory was found that represents the gamemode and both patches were going to be rewritten with a check to this value built in. Once the patches were completed testing was required.
+Again, shallow tests were performed ensuring the game at least ran at the changed functionalities.
+
+### 1.0.4
+(Still in progress)
+During the making of the previous version another problem popped up. The patch didnt take situations into account where the player would go long without saving while still picking up health upgrades. This would only be an issue for the vanilla save compatible patch, and would have to be addressed in the ROM bank D code.
 
 ## References
 The same references as the other Xtreme projects:
