@@ -43,8 +43,8 @@ After this roadblock it was decided to take a break from the project and approac
 Again, shallow tests were performed ensuring the game at least ran at the changed functionalities.
 
 ### 1.0.4
-(Still in progress)
 During the making of the previous version another problem popped up. The patch didnt take situations into account where the player would go long without saving while still picking up health upgrades. This would only be an issue for the vanilla save compatible patch, and would have to be addressed in the ROM bank D code.
+When this was fixed and thoroughly tested for functionality, it appeared that the previous patch assumed the wrong value for the extreme gamemode (0x03, instead of the actual 0x04) and this was replaced and tested. The patch now seemed to fully function, no matter the game mode.
 
 ## References
 The same references as the other Xtreme projects:
