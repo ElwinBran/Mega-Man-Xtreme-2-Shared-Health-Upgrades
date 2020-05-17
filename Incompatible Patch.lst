@@ -1,8 +1,8 @@
 LOC    OBJ              LINE   SOURCE
                         1      ; Check the game mode and branch to either original code copied to free space or patch code.
 036FFA FA04C0           2      ; LD A, ($C004)
-                        3      ; 0x03 is the Xtreme Mode value.
-036FFD FE03             4      ; CP #03
+                        3      ; 0x04 is the Xtreme Mode value.
+036FFD FE04             4      ; CP 0x04
 036FFF C2F17D           5      ; JP NZ, $7DF1 
                         6      ; Shared health code starts here; First load the max health into the offsets for both characters.
 037002 FA84C0           7      ; LD A, ($C084)
