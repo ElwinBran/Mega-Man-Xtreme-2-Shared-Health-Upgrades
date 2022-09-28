@@ -6,10 +6,10 @@ LOC    OBJ              LINE   SOURCE
 036FFF C2F17D           5      ; JP NZ, $7DF1 
                         6      ; Shared health code starts here; First load the max health into the offsets for both characters.
 037002 FA84C0           7      ; LD A, ($C084)
-037005 EAD9C0           8      ; LD $C0D9, A
-037008 EADEC0           9      ; LD $C0DE, A
+037005 EAD9C0           8      ; LD ($C0D9), A
+037008 EADEC0           9      ; LD ($C0DE), A
                         10     ; Check which character is active
-03700B FAC9C0           11     ; LD A, $C0C9
+03700B FAC9C0           11     ; LD A, ($C0C9)
 03700E A7               12     ; AND A
 03700F CD0C7E           13     ; CALL $7E0C
 ------
@@ -27,10 +27,10 @@ LOC    OBJ              LINE   SOURCE
 037E09 C31270           25     ; JP $7012
 ------
                         26     ; Continuation of the patch code in free space (0x7E0C) at runtime.
-037E0C FA84C0           27     ; LD A, $C084
+037E0C FA84C0           27     ; LD A, ($C084)
                         28     ; Only add the extra current health to the current characters value (0xC0D5 is X, 0xC0DA is Zero).
 037E0F 2005             29     ; JR NZ +#5
-037E11 EAD5C0           30     ; LD $C0D5, A
+037E11 EAD5C0           30     ; LD ($C0D5), A
 037E14 1804             31     ; JR +#4
-037E16 EADAC0           32     ; LD $C0DA, A
+037E16 EADAC0           32     ; LD ($C0DA), A
 037E19 C9               33     ; RET

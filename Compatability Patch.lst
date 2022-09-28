@@ -6,13 +6,13 @@ LOC    OBJ              LINE   SOURCE
                         4      ; 0x04 is the Xtreme Mode value.
 036FFD FE04             5      ; CP 0x04
 036FFF C2F17D           6      ; JP NZ, $7DF1 
-                        7      ; use leftover overwritten space to ensure X's shadow value is at least 0x10, the starting value.
+                        7      ; Use unused RAM space to ensure X's shadow value is at least 0x10, the starting value.
 037002 FAFEDF           8      ; LD A, ($DFFE)
 037005 FE00             9      ; CP 0x00
 037007 2005             10     ; JR NZ +#5
 037009 3E10             11     ; LD A, 0x10
 03700B EAFEDF           12     ; LD ($DFFE), A
-                        13     ; Go to free space to finish the patch shared health trick.
+                        13     ; Go to free space to finish the patch shared health code.
 03700E C30C7E           14     ; JP $7E0C
 037011 00               15     ; NOP
 ------
@@ -83,30 +83,30 @@ LOC    OBJ              LINE   SOURCE
 0BFF4D 0E10             73     ; LD C, 10
 0BFF4F 91               74     ; SUB C
 0BFF50 47               75     ; LD B, A
-0BFF51 FAFEDF           76     ; LD A, $DFFE
+0BFF51 FAFEDF           76     ; LD A, ($DFFE)
 0BFF54 91               77     ; SUB C
 0BFF55 80               78     ; ADD A, B
 0BFF56 81               79     ; ADD A, C
                         80     ; Insert this highest shared health value into the Max health offsets of both characters.
-0BFF57 EAD9C0           81     ; LD $C0D9, A
-0BFF5A EADEC0           82     ; LD $C0DE, A
+0BFF57 EAD9C0           81     ; LD ($C0D9), A
+0BFF5A EADEC0           82     ; LD ($C0DE), A
                         83     ; Then perform some tricks if for autosaves the current health exceeds the max health.
 0BFF5D 4F               84     ; LD C, A
 0BFF5E 0621             85     ; LD B, 21
-0BFF60 FAD5C0           86     ; LD A, $C0D5
+0BFF60 FAD5C0           86     ; LD A, ($C0D5)
 0BFF63 B8               87     ; CP B
 0BFF64 3007             88     ; JR NC +#7
 0BFF66 B9               89     ; CP C
 0BFF67 3004             90     ; JR NC +#4
 0BFF69 79               91     ; LD A, C
-0BFF6A EAD5C0           92     ; LD $C0D5, A
-0BFF6D FADAC0           93     ; LD A, $C0DA
+0BFF6A EAD5C0           92     ; LD ($C0D5), A
+0BFF6D FADAC0           93     ; LD A, ($C0DA)
 0BFF70 B8               94     ; CP B
 0BFF71 3007             95     ; JR NC +#7
 0BFF73 B9               96     ; CP C
 0BFF74 3004             97     ; JR NC +#4
 0BFF76 79               98     ; LD A, C
-0BFF77 EADAC0           99     ; LD $C0DA, A
+0BFF77 EADAC0           99     ; LD ($C0DA), A
                         100    ; Going back on the original call
 0BFF7A CDA369           101    ; CALL $69A3
 0BFF7D C9               102    ; RET
@@ -140,7 +140,7 @@ LOC    OBJ              LINE   SOURCE
 0BFF89 C31868           127    ; JP $6818
 ------
                         128    ; 0x7F8C at runtime, executes patch saving compatability code and returns to normal code.
-0BFF8C FAFEDF           129    ; LD A, DFFE
+0BFF8C FAFEDF           129    ; LD A, ($DFFE)
                         130    ; Ensure X's shadow health value is 0x10 or above (starting a new game leaves the shadow at 0x00)
 0BFF8F FE00             131    ; CP 0x00
 0BFF91 2005             132    ; JR NZ +#5
